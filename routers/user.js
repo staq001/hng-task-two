@@ -36,7 +36,6 @@ router.post("/auth/register", async (req, res) => {
       status: "Bad request",
       message: "Registration unsuccessful",
       statusCode: 400,
-      err
     });
   }
 })
