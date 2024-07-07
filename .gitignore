@@ -1,5 +1,3 @@
 config
 node_modules
 models/play.js
-vercel.json
-public
