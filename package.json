@@ -7,8 +7,8 @@
     "test": "tests"
   },
   "scripts": {
-    "start": "nodemon src/app.js",
-    "dev": "env-cmd ./config/dev.env nodemon src/app.js e -js",
+    "start": "nodemon api/index.js",
+    "dev": "env-cmd ./config/dev.env nodemon api/index.js e -js",
     "test": "env-cmd ./config/dev.env jest --watchAll --detectOpenHandles --runInBand"
   },
   "jest": {
