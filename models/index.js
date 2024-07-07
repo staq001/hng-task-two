@@ -104,11 +104,6 @@ User.afterCreate(async (user, options) => {
 //       password: "134wertyuo",
 //       phone: "08045466666"
 //     });
-//     // const user = await User.findAll()
-//     console.log(user);
-//   } catch (err) {
-//     console.log("Error:", err)
-//   }
 // })()
 
 

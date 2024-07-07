@@ -11,10 +11,8 @@ const userOne = {
 }
 
 const setupDatabase = async function () {
-  await sequelize.sync({ force: true }) // resets or deletes the whole database before insertion.
-
-  // deleting everything in the database prior
-
+  await User.destroy({ where: {} })
+  // resets or deletes the whole database before new insertion.
 
   // creating a user prior, most especially for LOGIN.
   await User.create(userOne)
