@@ -3,7 +3,7 @@ const router = new express.Router()
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const { sequelize } = require('../db/sequelize.js')
-const { User, Organisation } = require('../models/index.js')
+const { User } = require('../models/index.js')
 const auth = require('../middleware/auth.js')
 
 /* CREATE USER */

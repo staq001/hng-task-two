@@ -1,6 +1,5 @@
-const jwt = require('jsonwebtoken');
-const { User, Organisation } = require('../../models/index');
-const { sequelize, DataTypes } = require('../../db/sequelize');
+const { User } = require('../../models/index');
+
 
 
 const userOne = {
