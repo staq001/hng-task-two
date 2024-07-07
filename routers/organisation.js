@@ -34,7 +34,7 @@ router.get('/api/organisations', auth, async (req, res) => {
   try {
     const createdOrgs = await Organisation.findAll({ where: { ownerId: req.user.userId } });
     const user = await User.findOne({ where: { userId: req.user.userId } });
-    const joinedOrgs = await user.getOrganisations(); // fucking works LFGGGG
+    const joinedOrgs = await user.getOrganisations();
 
     res.send({
       status: "success",
@@ -66,7 +66,6 @@ router.post('/api/organisations', auth, async (req, res) => {
         orgId: organisation.orgId.toString(),
         name: organisation.name,
         description: organisation.description || null
-        // UserUserId
       }
     })
   } catch (err) {
@@ -99,7 +98,5 @@ router.post('/api/organisations/:orgId/users', async (req, res) => {
   }
 })
 
-// we have to check if user is present in org to prevent double addition. how do we do that?
-// need to fix-- it works now.
 
 module.exports = router

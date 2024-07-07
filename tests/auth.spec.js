@@ -1,6 +1,6 @@
 const request = require('supertest')
 const { User, Organisation } = require("../models/index.js")
-const app = require('../api/index.js')
+const app = require('../src/app.js')
 const { sequelize } = require('../db/sequelize.js')
 const jwt = require('jsonwebtoken')
 const setupDatabase = require('./fixtures/db.js')
