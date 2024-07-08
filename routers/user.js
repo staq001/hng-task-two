@@ -3,7 +3,7 @@ const router = new express.Router()
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const { sequelize } = require('../db/sequelize.js')
-const { User } = require('../models/index.js')
+const { User, Organisation } = require('../models/index.js')
 const auth = require('../middleware/auth.js')
 
 /* CREATE USER */
@@ -84,26 +84,78 @@ router.get('/users/me', auth, (req, res) => {
 })
 
 // returns user record
+// router.get('/api/users/:id', auth, async (req, res) => {
+//   try {
+//     const { id } = req.params
+//     const user = await User.findOne({ where: { userId: id } })
+//     res.status(200).send({
+// status: "success",
+// message: "Fetch successful",
+//       data: {
+//         userId: user.userId,
+//         firstName: user.firstName,
+//         lastName: user.lastName,
+//         email: user.email,
+//         phone: user.phone || null
+//       }
+//     })
+//   } catch (err) {
+//     res.status(404).send({
+//       status: "Bad request",
+//       message: "Fetch failed",
+//       statusCode: 404
+//     })
+//   }
+// })
+
 router.get('/api/users/:id', auth, async (req, res) => {
   try {
-    const { id } = req.params
-    const user = await User.findOne({ where: { userId: id } })
+    let createdOrganisations, joinedOrganisations
+    const { id } = req.params;
+    if (!id === req.user.userId) return res.status(404).send({ message: "ID doesn't match current user" })
+    const user = await User.findOne({ where: { userId: id } });
+
+    // both arrays.
+    const createdOrgs = await Organisation.findAll({ where: { ownerId: user.userId } })
+    const joinedOrgs = await user.getOrganisations();
+
+    const cOrgs = createdOrgs.map((corgs) => corgs.name); // another arrays of created orgs
+    const jOrgs = joinedOrgs.map((jorgs) => jorgs.name); // same
+
+    for (const orgsNames of cOrgs) {
+      createdOrganisations = {
+        organisation_name: orgsNames,
+        data: {
+          userId: user.userId,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          phone: user.phone || null
+        }
+      }
+    }
+    for (const orgsNames of jOrgs) {
+      joinedOrganisations = {
+        organisation_name: orgsNames,
+        data: {
+          userId: user.userId,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          phone: user.phone || null
+        }
+      }
+    }
     res.status(200).send({
       status: "success",
-      message: "Fetch successful",
-      data: {
-        userId: user.userId,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        phone: user.phone || null
-      }
-    })
+      message: "Fetch successful", createdOrganisations, joinedOrganisations
+    });
   } catch (err) {
-    res.status(404).send({
+    res.status(400).send({
       status: "Bad request",
       message: "Fetch failed",
-      statusCode: 404
+      statusCode: 404,
+      err
     })
   }
 })
