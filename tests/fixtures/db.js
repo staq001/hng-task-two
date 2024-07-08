@@ -9,8 +9,12 @@ const userOne = {
   password: "dontouchme5tt"
 }
 
+// const setupDatabaseTwo = async function () {
+
+//   await User.destroy({ where: {} })
+// }
+
 const setupDatabase = async function () {
-  await User.destroy({ where: {} })
   // resets or deletes the whole database before new insertion.
 
   // creating a user prior, most especially for LOGIN.
