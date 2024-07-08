@@ -110,7 +110,9 @@ router.get('/users/me', auth, (req, res) => {
 
 router.get('/api/users/:id', auth, async (req, res) => {
   try {
-    let createdOrganisations, joinedOrganisations
+    const createdOrganisations = []
+    const joinedOrganisations = []
+
     const { id } = req.params;
     if (!id === req.user.userId) return res.status(404).send({ message: "ID doesn't match current user" })
     const user = await User.findOne({ where: { userId: id } });
@@ -119,12 +121,23 @@ router.get('/api/users/:id', auth, async (req, res) => {
     const createdOrgs = await Organisation.findAll({ where: { ownerId: user.userId } })
     const joinedOrgs = await user.getOrganisations();
 
-    const cOrgs = createdOrgs.map((corgs) => corgs.name); // another arrays of created orgs
-    const jOrgs = joinedOrgs.map((jorgs) => jorgs.name); // same
+    createdOrgs.map((corgs) => {
+      data = {
+        organisation_name: corgs.name,
+        data: {
+          userId: user.userId,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          phone: user.phone || null
+        }
+      };
+      createdOrganisations.push(data)
+    });
 
-    for (const orgsNames of cOrgs) {
-      createdOrganisations = {
-        organisation_name: orgsNames,
+    joinedOrgs.map((jorgs) => {
+      data = {
+        organisation_name: jorgs.name,
         data: {
           userId: user.userId,
           firstName: user.firstName,
@@ -132,21 +145,10 @@ router.get('/api/users/:id', auth, async (req, res) => {
           email: user.email,
           phone: user.phone || null
         }
-      }
-    }
-    for (const orgsNames of jOrgs) {
-      joinedOrganisations = {
-        organisation_name: orgsNames,
-        data: {
-          userId: user.userId,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          phone: user.phone || null
-        }
-      }
-    }
-    res.status(200).send({
+      };
+      joinedOrganisations.push(data)
+    });
+    res.status(200).json({
       status: "success",
       message: "Fetch successful", createdOrganisations, joinedOrganisations
     });
